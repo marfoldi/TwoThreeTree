@@ -78,24 +78,24 @@ rt23_insert value tree
 	| contains_RN4 tree == True = Nothing
 	| isJust (t23_lookup value (fromJust (rt23_to_t23 tree))) = Just tree
 rt23_insert value tree = Just (rt23_doSplit (rt23_doInsert tree))
-	where 
-		rt23_doInsert (RN2 REmpty v1 REmpty)
-			| value < v1 = RN3 REmpty value REmpty v1 REmpty
-			| otherwise = RN3 REmpty v1 REmpty value REmpty
-		rt23_doInsert (RN3 REmpty v1 REmpty v2 REmpty)
-			| value < v1 = RN4 REmpty value REmpty v1 REmpty v2 REmpty
-			| value < v2 = RN4 REmpty v1 REmpty value REmpty v2 REmpty
-			| otherwise = RN4 REmpty v1 REmpty v2 REmpty value REmpty
-		rt23_doInsert (RN2 p1 v1 p2) 
-			| value < v1 = RN2 (rt23_doInsert p1) v1 p2
-			| otherwise = RN2 p1 v1 (rt23_doInsert p2)
-		rt23_doInsert (RN3 p1 v1 p2 v2 p3) 
-			| value < v1 = RN3 (rt23_doInsert p1) v1 p2 v2 p3
-			| value < v2 = RN3 p1 v1 (rt23_doInsert p2) v2 p3
-			| otherwise = RN3 p1 v1 p2 v2 (rt23_doInsert p3)
-		rt23_doSplit tree
-			| contains_RN4 tree == True = rt23_doSplit (rt23_propagateSplit tree)
-			| otherwise = tree
+where 
+	rt23_doInsert (RN2 REmpty v1 REmpty)
+		| value < v1 = RN3 REmpty value REmpty v1 REmpty
+		| otherwise = RN3 REmpty v1 REmpty value REmpty
+	rt23_doInsert (RN3 REmpty v1 REmpty v2 REmpty)
+		| value < v1 = RN4 REmpty value REmpty v1 REmpty v2 REmpty
+		| value < v2 = RN4 REmpty v1 REmpty value REmpty v2 REmpty
+		| otherwise = RN4 REmpty v1 REmpty v2 REmpty value REmpty
+	rt23_doInsert (RN2 p1 v1 p2) 
+		| value < v1 = RN2 (rt23_doInsert p1) v1 p2
+		| otherwise = RN2 p1 v1 (rt23_doInsert p2)
+	rt23_doInsert (RN3 p1 v1 p2 v2 p3) 
+		| value < v1 = RN3 (rt23_doInsert p1) v1 p2 v2 p3
+		| value < v2 = RN3 p1 v1 (rt23_doInsert p2) v2 p3
+		| otherwise = RN3 p1 v1 p2 v2 (rt23_doInsert p3)
+	rt23_doSplit tree
+		| contains_RN4 tree == True = rt23_doSplit (rt23_propagateSplit tree)
+		| otherwise = tree
 			
 t23_insert :: a (T23 a) -> T23 a | Eq a & Ord a
 t23_insert value tree
@@ -103,18 +103,18 @@ t23_insert value tree
 	| otherwise = tree
 
 class Foldable t
-	where
-		fold :: (a b -> b) b (t a) -> b 
+where
+	fold :: (a b -> b) b (t a) -> b 
 
 instance Foldable []
-	where 
-		fold func value list = foldr func value list
+where 
+	fold func value list = foldr func value list
 
 instance Foldable T23
-	where 
-		fold func value Empty = value
-		fold func value (N2 p1 v1 p2) = fold func (func v1 (fold func value p2)) p1
-		fold func value (N3 p1 v1 p2 v2 p3) = fold func (func v1 (fold func (func v2 (fold func value p3)) p2)) p1
+where 
+	fold func value Empty = value
+	fold func value (N2 p1 v1 p2) = fold func (func v1 (fold func value p2)) p1
+	fold func value (N3 p1 v1 p2 v2 p3) = fold func (func v1 (fold func (func v2 (fold func value p3)) p2)) p1
 
 toList :: (t a) -> [a] | Foldable t
 toList tree = fold (\x y -> [x] ++ y) [] tree
