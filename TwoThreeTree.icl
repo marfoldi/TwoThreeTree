@@ -115,3 +115,14 @@ instance Foldable T23
 		fold func value Empty = value
 		fold func value (N2 p1 v1 p2) = fold func (func v1 (fold func value p2)) p1
 		fold func value (N3 p1 v1 p2 v2 p3) = fold func (func v1 (fold func (func v2 (fold func value p3)) p2)) p1
+
+toList :: (t a) -> [a] | Foldable t
+toList tree = fold (\x y -> [x] ++ y) [] tree
+
+instance == (KeyVal k v) | == k
+where
+	(==) (KV k1 _) (KV k2 _) = k1 == k2
+
+instance < (KeyVal k v) | < k
+where
+	(<) (KV k1 _) (KV k2 _) = k1 < k2
