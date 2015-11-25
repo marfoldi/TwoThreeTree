@@ -3,13 +3,13 @@ module TwoThreeTree
 import StdEnv, StdLib, GenEq
 
 :: T23 a = Empty
-         | N2 (T23 a) a (T23 a)
-         | N3 (T23 a) a (T23 a) a (T23 a)
+	| N2 (T23 a) a (T23 a)
+	| N3 (T23 a) a (T23 a) a (T23 a)
          
 :: RT23 a = REmpty
-          | RN2 (RT23 a) a (RT23 a)
-          | RN3 (RT23 a) a (RT23 a) a (RT23 a)
-          | RN4 (RT23 a) a (RT23 a) a (RT23 a) a (RT23 a)
+	| RN2 (RT23 a) a (RT23 a)
+	| RN3 (RT23 a) a (RT23 a) a (RT23 a)
+	| RN4 (RT23 a) a (RT23 a) a (RT23 a) a (RT23 a)
 
 :: KeyVal k v = KV k v
 
