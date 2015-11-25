@@ -101,3 +101,17 @@ t23_insert :: a (T23 a) -> T23 a | Eq a & Ord a
 t23_insert value tree
 	| isJust (rt23_insert value (t23_to_rt23 tree)) = fromJust (rt23_to_t23 (fromJust (rt23_insert value (t23_to_rt23 tree))))
 	| otherwise = tree
+
+class Foldable t
+	where
+		fold :: (a b -> b) b (t a) -> b 
+
+instance Foldable []
+	where 
+		fold func value list = foldr func value list
+
+instance Foldable T23
+	where 
+		fold func value Empty = value
+		fold func value (N2 p1 v1 p2) = fold func (func v1 (fold func value p2)) p1
+		fold func value (N3 p1 v1 p2 v2 p3) = fold func (func v1 (fold func (func v2 (fold func value p3)) p2)) p1
