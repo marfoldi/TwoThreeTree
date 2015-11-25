@@ -126,3 +126,21 @@ where
 instance < (KeyVal k v) | < k
 where
 	(<) (KV k1 _) (KV k2 _) = k1 < k2
+
+generic gJSON a :: a -> String
+gJSON{|UNIT|} UNIT = ""
+gJSON{|Int|} x = "{\"type\":\"int\",\"value\":" +++ (toString x) +++ "}"
+gJSON{|Real|} x = "{\"type\":\"real\",\"value\":" +++ (toString x) +++ "\"}"
+gJSON{|String|} x = "{\"type\":\"string\",\"value\":\"" +++ x +++ "\"}"
+gJSON{|Bool|} x = "{\"type\":\"bool\",\"value\":" +++ (toString x) +++ "}"
+gJSON{|Char|} x = "{\"type\":\"char\",\"value\":" +++ (toString x) +++ "}"
+gJSON{|OBJECT of o|} f (OBJECT x)   = "{\"type\":\"" +++ o.gtd_name +++ "\",\"value\":" +++ (f x) +++ "}"
+gJSON{|EITHER|} fl fr (LEFT x) = fl x
+gJSON{|EITHER|} fl fr (RIGHT x) = fr x
+gJSON{|CONS of c|} f (CONS x) = "{\"constructor\":\"" +++ c.gcd_name +++ "\",\"params\":[" +++ (f x) +++ "]}"
+gJSON{|PAIR|} f1 f2 (PAIR x y) = (f1 x) +++ "," +++ (f2 y)
+
+derive gJSON T23, KeyVal
+
+toJSON :: a -> String | gJSON {|*|} a
+toJSON x = gJSON{|*|} x
